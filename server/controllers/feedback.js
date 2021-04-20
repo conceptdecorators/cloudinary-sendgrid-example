@@ -9,17 +9,32 @@ exports.emailFeedback = (req, res) => {
     from: email,
     subject: "Feedback form",
     html: `
-    <h1>Customer Feedback Form</h1>
-    <hr />
-    <h2>Sender name: ${name}</h2>
-    <h2>Sender email: ${email}</h2>
-    <h2>Sender nessage: ${message}</h2>
-    <br />
-  ${uploadedFiles.map((f) => {
-    return `<img src="${f.secure_url}" alt="${f.original_filename}" />`;
-  })}
-    <hr />
-    <p>https://feedbackonline.com</p>
-    `,
+            <h1>Customer Feedback Form</h1>
+            <hr />
+            <h2>Sender name: ${name}</h2>
+            <h2>Sender email: ${email}</h2>
+            <h2>Sender message: ${message}</h2>
+            <br />
+            ${uploadedFiles.map((f) => {
+              return `<img src="${f.secure_url}" alt="${f.original_filename}" style="width:50%;overflow:hidden;padding:50px;" />`;
+            })}
+            <hr />
+            <p>https://feedbackonline.com</p>
+        `,
   };
+
+  sgMail
+    .send(emailData)
+    .then((sent) => {
+      console.log(sent);
+      return res.json({
+        success: true,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.json({
+        success: false,
+      });
+    });
 };
